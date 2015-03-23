@@ -24,6 +24,50 @@ function pause() {
 	writeToFifo("p", fifoErrorHandler);
 }
 
+function seekP30() {
+	writeToFifo("right", fifoErrorHandler);
+}
+
+function seekM30() {
+	writeToFifo("left", fifoErrorHandler);
+}
+
+function seekP600() {
+	writeToFifo("up", fifoErrorHandler);
+}
+
+function seekM600() {
+	writeToFifo("down", fifoErrorHandler);
+}
+
+function volumeUp() {
+	writeToFifo("+", fifoErrorHandler);
+}
+
+function volumeDown() {
+	writeToFifo("-", fifoErrorHandler);
+}
+
+function previousAudio() {
+	writeToFifo("j", fifoErrorHandler);
+}
+
+function nextAudio() {
+	writeToFifo("k", fifoErrorHandler);
+}
+
+function previousSubtitle() {
+	writeToFifo("n", fifoErrorHandler);
+}
+
+function nextSubtitle() {
+	writeToFifo("m", fifoErrorHandler);
+}
+
+function toggleSubtitle() {
+	writeToFifo("s", fifoErrorHandler);
+}
+
 function writeToFifo(command, callback) {
 	if(isPlaying())
 		exec("echo " + command + " > " + FIFO, callback);

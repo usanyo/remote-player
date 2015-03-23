@@ -27,6 +27,31 @@ function requestCameIn(request, response) {
 			player.pause();
 			response.write('Pause/resume playing!');
 			break;
+		case 'seekforward30mp':
+			player.seekP30();
+			response.write('Forward 30mp');
+			break;
+		case 'seekback30mp':
+			player.seekM30();
+			response.write('Backward 30mp');
+			break;
+		case 'seekforward10p':
+			player.seekP600();
+			response.write('Forward 10p');
+			break;
+		case 'seekback10p':
+			player.seekM600();
+			response.write('Backward 10p');
+			break;
+		case 'volUp':
+			player.volumeUp();
+			response.write('Volume++');
+			break;
+		case 'volDown':
+			player.volumeDown();
+			response.write('Volume--');
+			break;
+		
 		default:
 			response.write('Invalid command!\n');
 	}
