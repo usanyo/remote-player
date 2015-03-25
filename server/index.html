@@ -1,0 +1,14 @@
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io('http://localhost:8000');
+  socket.on('news', function (data) {
+  	var x = document.getElementById("log");
+		x.innerHTML = data.hello;
+    socket.emit('my other event', 'test.mp3');
+  });
+</script>
+<body>
+		<div id="log">
+			
+		</div>
+</body>
