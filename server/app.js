@@ -1,7 +1,7 @@
 var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
-var palyer = require("./palyer.js");
+var player = require("./player.js");
 
 app.listen(8000);
 
@@ -19,7 +19,18 @@ function handler (req, res) {
 }
 
 io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('play', player.start);
-  });
+  socket.on('play', function(path) {
+		player.start(path, function(text) {
+			console.log(text);
+  		socket.emit('news', { message: text });
+		});
+	});
+	socket.on('stop', function(){
+		console.log('stop');
+		player.stop(function(text) {
+			console.log(text);
+			socket.emit('news', { message: text });
+		});
+		socket.emit('news',{message: 'stopped'});
+	});
 });

@@ -8,12 +8,13 @@ var exec = require('child_process').exec;
 
 var playingProcess;
 
-function start(path) {
+function start(path, callback) {
 	if(playingProcess != null)
 		playingProcess.kill();
 	if(!fs.existsSync(FIFO))
 		exec("mkfifo " + FIFO, fifoErrorHandler);
 	playingProcess = exec(PLAYER + " " + path, playEnded);
+	callback('start playing ' + path);
 }
 
 function stop() {

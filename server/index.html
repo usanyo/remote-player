@@ -2,13 +2,23 @@
 <script>
   var socket = io('http://localhost:8000');
   socket.on('news', function (data) {
-  	var x = document.getElementById("log");
-		x.innerHTML = data.hello;
-    socket.emit('my other event', 'test.mp3');
+  	var logDiv = document.getElementById("log");
+		logDiv.innerHTML = data.message;
   });
+
+	function stop() {
+		socket.emit('stop');
+	}
+
+	function start() {
+		socket.emit('play', 'test.mp3');
+	}
 </script>
 <body>
-		<div id="log">
+	<input type="text" name="source" value="">
+	<button onclick="start()">Start</button>
+	<button onclick="stop()">Stop</button>
+	<div id="log">
 			
-		</div>
+	</div>
 </body>
