@@ -11,7 +11,7 @@
 	}
 
 	function start() {
-		socket.emit('play', 'test.mp3');
+		socket.emit('play', document.source.value);
 	}
 </script>
 <body>

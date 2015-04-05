@@ -20,26 +20,22 @@ function handler (req, res) {
   });
 }
 
-io.on('connection', function (soc) {
-	socket = soc;
+var socket;
+
+io.on('connection', connectionHandler);
+
+function connectionHandler(sock) {
+	socket = sock;
   socket.on('play', function(path) {
-		player.start(path, sendBackLog, playEnded);
+		player.start(path, logResponse);
 	});
 	socket.on('stop', function(){
-		console.log('stop');
-		player.stop(function(err, stdout, stderr) {
-			console.log('Stopped');
-		});
+		player.stop(logResponse);
+		socket.emit('news',{message: 'stopped'});
 	});
-});
+}
 
-function sendBackLog(text) {
+function logResponse(text) {
 	console.log(text);
-	socket.emit('log', {message: text});
+	socket.emit('news', {message: text});
 }
-
-function playEnded(err, stdout, stderr) {
-	sendBackLog('Elvileg torolve' + '\n' + stdout + '\n' + stderr);
-}
-
-
