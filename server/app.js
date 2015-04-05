@@ -3,6 +3,8 @@ var io = require('socket.io')(app);
 var fs = require('fs');
 var player = require("./player.js");
 
+var socket;
+
 app.listen(8000);
 
 function handler (req, res) {
@@ -18,19 +20,26 @@ function handler (req, res) {
   });
 }
 
-io.on('connection', function (socket) {
+io.on('connection', function (soc) {
+	socket = soc;
   socket.on('play', function(path) {
-		player.start(path, function(text) {
-			console.log(text);
-  		socket.emit('news', { message: text });
-		});
+		player.start(path, sendBackLog, playEnded);
 	});
 	socket.on('stop', function(){
 		console.log('stop');
-		player.stop(function(text) {
-			console.log(text);
-			socket.emit('news', { message: text });
+		player.stop(function(err, stdout, stderr) {
+			console.log('Stopped');
 		});
-		socket.emit('news',{message: 'stopped'});
 	});
 });
+
+function sendBackLog(text) {
+	console.log(text);
+	socket.emit('log', {message: text});
+}
+
+function playEnded(err, stdout, stderr) {
+	sendBackLog('Elvileg torolve' + '\n' + stdout + '\n' + stderr);
+}
+
+
