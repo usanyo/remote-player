@@ -18,19 +18,22 @@ function handler (req, res) {
   });
 }
 
-io.on('connection', function (socket) {
+var socket;
+
+io.on('connection', connectionHandler);
+
+function connectionHandler(sock) {
+	socket = sock;
   socket.on('play', function(path) {
-		player.start(path, function(text) {
-			console.log(text);
-  		socket.emit('news', { message: text });
-		});
+		player.start(path, logResponse);
 	});
 	socket.on('stop', function(){
-		console.log('stop');
-		player.stop(function(text) {
-			console.log(text);
-			socket.emit('news', { message: text });
-		});
+		player.stop(logResponse);
 		socket.emit('news',{message: 'stopped'});
 	});
-});
+}
+
+function logResponse(text) {
+	console.log(text);
+	socket.emit('news', {message: text});
+}
