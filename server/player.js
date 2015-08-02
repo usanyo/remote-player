@@ -6,15 +6,13 @@ var PLAYER = "mplayer -slave -input file=" + FIFO;
 var sys = require('sys')
 var exec = require('child_process').exec;
 
-var playingProcess;
-
 function start(path, callback) {
-	if(playingProcess != null)
-		playingProcess.kill();
-	if(!fs.existsSync(FIFO))
-		exec("mkfifo " + FIFO, fifoErrorHandler);
-	playingProcess = exec(PLAYER + " " + path, playEnded);
-	callback('start playing ' + path);
+	if(exports.playingProcess == null) {
+		if(!fs.existsSync(FIFO))
+			exec("mkfifo " + FIFO, fifoErrorHandler);
+		exports.playingProcess = exec(PLAYER + " " + path, playEnded);
+		callback('start playing ' + path);
+	}
 }
 
 function stop() {
@@ -73,17 +71,16 @@ function writeToFifo(command, callback) {
 	if(isPlaying())
 		exec("echo " + command + " > " + FIFO, callback);
 	else
-		console.log('No media is played');
+		callback("No media is played.");
 }
 
 function fifoErrorHandler(error, stdout, stderr) {
 	if(error)
 		console.log(error);
-	console.log("parancs elkuldve");
 }
 
 function playEnded(error, stdout, stderr) {
-	playingProcess = null;
+	exports.playingProcess = null;
 	console.log(stdout);
 	console.log(stderr);
 	console.log('vege');
@@ -93,7 +90,7 @@ function playEnded(error, stdout, stderr) {
 }
 
 function isPlaying() {
-	return playingProcess != null;
+	return exports.playingProcess != null;
 }
 
 exports.playEnded = playEnded;
