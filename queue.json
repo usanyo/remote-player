@@ -1,10 +1,17 @@
 [
     {
-        "name": "Test.mp3",
-        "path": "server/test.mp3"
+        "name": "Test2",
+        "path": "/media/Teri",
+        "status": "PLAYED"
     },
     {
-        "name": "Test2",
-        "path": "/media/Teri"
+        "name": "Song0",
+        "path": "/media/Teri0",
+        "status": "PLAYING"
+    },
+    {
+        "name": "Song1",
+        "path": "/media/Teri1",
+        "status": "TO_PLAY"
     }
 ]

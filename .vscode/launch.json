@@ -30,6 +30,46 @@
 			"outDir": null
 		},
 		{
+            "name": "Test all",
+            "type": "node",
+            "program": "/usr/lib/node_modules/mocha/bin/mocha",
+            "stopOnEntry": false,
+            "args": [],
+            "cwd": ".",
+            "runtimeExecutable": null,
+            "env": { "NODE_ENV": "production"}
+        },
+		{
+            "name": "Test queue",
+            "type": "node",
+            "program": "/usr/lib/node_modules/mocha/bin/mocha",
+            "stopOnEntry": false,
+            "args": ["test/test-queue.js"],
+            "cwd": ".",
+            "runtimeExecutable": null,
+            "env": { "NODE_ENV": "production"}
+        },
+		{
+            "name": "Test player",
+            "type": "node",
+            "program": "/usr/lib/node_modules/mocha/bin/mocha",
+            "stopOnEntry": false,
+            "args": ["test/test-player.js"],
+            "cwd": ".",
+            "runtimeExecutable": null,
+            "env": { "NODE_ENV": "production"}
+        },
+		{
+            "name": "Test core",
+            "type": "node",
+            "program": "/usr/lib/node_modules/mocha/bin/mocha",
+            "stopOnEntry": false,
+            "args": ["test/test-core.js"],
+            "cwd": ".",
+            "runtimeExecutable": null,
+            "env": { "NODE_ENV": "production"}
+        },
+		{
 			"name": "Attach",
 			"type": "node",
 			// TCP/IP address. Default is "localhost".
