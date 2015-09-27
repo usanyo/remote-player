@@ -13,5 +13,10 @@
         "name": "Song1",
         "path": "/media/Teri1",
         "status": "TO_PLAY"
+    },
+    {
+        "name": "Song2",
+        "path": "/media/Teris1",
+        "status": "PLAYED"
     }
 ]

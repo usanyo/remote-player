@@ -33,15 +33,24 @@ module.exports.next = function () {
 	for(var i = 0; i < list.length; i++) {
 		if(list[i].status == "PLAYING") {
 			list[i].status = "PLAYED";
-			list[i+1].status = "PLAYING";
+			if(i+1 < list.length)
+				list[i+1].status = "PLAYING";
 			isPlaying = true;
 			break;
 		}
 	}
 	if(!isPlaying)
 		list[0].status = "PLAYING"
-	module.exports.list = list;
 	saveJson()
+}
+
+module.exports.goto = function (index) {
+	var list = module.exports.list;
+	for(var i = 0; i < index; i++)
+		list[i].status = "PLAYED";
+	list[index].status = "PLAYING"
+	for(var i = index + 1; i < list.length; i++)
+		list[i].status = "TO_PLAY"
 }
 
 function loadJson() {

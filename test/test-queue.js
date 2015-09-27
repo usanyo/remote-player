@@ -48,7 +48,8 @@ describe('Queue', function() {
 		});
 	});
 	describe('Go to media', function () {
-		it('should start to step to index', function () {
+		it('should step to given index', function () {
+			queue.add({name: "Song2", path: "/media/Teris1", status: "PLAYED"})
 			queue.goto(2)
 			assert.equal(queue.list[0].status, "PLAYED")
 			assert.equal(queue.list[1].status, "PLAYED")
