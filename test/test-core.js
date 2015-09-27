@@ -3,8 +3,13 @@ var fs = require("fs")
 var core = require("../server/core")
 
 var queue = {
-	'add' : function() {},
-	'list' : ['first.mp3', 'youtube.avi']
+	add : function() {},
+	length : function() {},
+	removeItem : function() {},
+	indexOf : function() {},
+	next : function() {},
+	goto : function() {},
+	list : ['first.mp3', 'youtube.avi']
 }
 
 var player = {
