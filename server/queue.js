@@ -2,6 +2,11 @@ var fs = require('fs');
 
 var PATH_TO_JSON = "queue.json"
 
+module.exports.clean = function () {
+	if(fs.existsSync(PATH_TO_JSON))
+		fs.unlinkSync(PATH_TO_JSON)
+}
+
 module.exports.add = function (media) {
 	loadJson()
 	module.exports.list.push(media);

@@ -9,6 +9,7 @@ var queue = {
 	indexOf : function() {},
 	next : function() {},
 	goto : function() {},
+	clean : function() {},
 	list : ['first.mp3', 'youtube.avi']
 }
 
@@ -22,6 +23,15 @@ var player = {
 
 describe('Core', function() {
 	describe('init', function () {
+		it('should clean the queue', function () {
+			core.init(player, queue)
+			var isCleaned = false;
+			core.queue.clean = function() {
+				isCleaned = true;
+			}
+			core.clean()
+			assert(isCleaned)
+		});
 		it('should assign the player and the queue', function () {
 			core.init(player, queue)
 			assert.equal(player, core.player)
