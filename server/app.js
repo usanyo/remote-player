@@ -3,6 +3,10 @@ var io = require('socket.io')(app);
 var fs = require('fs');
 var player = require("./player.js");
 var queue = require("./queue.js");
+var core = require("./core.js");
+
+core.init(player, queue);
+player.init(logResponse)
 
 app.listen(8000);
 
@@ -26,10 +30,10 @@ io.on('connection', connectionHandler);
 function connectionHandler(sock) {
 	socket = sock;
 	socket.on('play', function(path) {
-		player.start(path, logResponse);
+		core.play(path);
 	});
 	socket.on('stop', function(){
-		player.stop(logResponse);
+		core.stop();
 		socket.emit('news',{message: 'stopped'});
 	});
 }

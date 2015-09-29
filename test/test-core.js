@@ -14,6 +14,7 @@ var queue = {
 }
 
 var player = {
+	init : function(logFun) {},
 	'playEnded' : function() {},
 	'start' : function() {},
 	'stop' : function() {},

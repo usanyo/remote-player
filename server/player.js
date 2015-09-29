@@ -6,12 +6,18 @@ var PLAYER = "mplayer -slave -input file=" + FIFO;
 var sys = require('sys')
 var exec = require('child_process').exec;
 
-function start(path, callback) {
+var log = function(){}
+
+function init(logFunction) {
+	log = logFunction;
+}
+
+function start(path) {
 	if(exports.playingProcess == null) {
 		if(!fs.existsSync(FIFO))
 			exec("mkfifo " + FIFO, fifoErrorHandler);
 		exports.playingProcess = exec(PLAYER + " " + path, playEnded);
-		callback('start playing ' + path);
+		log('start playing ' + path);
 	}
 }
 
@@ -67,11 +73,11 @@ function toggleSubtitle() {
 	writeToFifo("s", fifoErrorHandler);
 }
 
-function writeToFifo(command, callback) {
+function writeToFifo(command) {
 	if(isPlaying())
-		exec("echo " + command + " > " + FIFO, callback);
+		exec("echo " + command + " > " + FIFO, log);
 	else
-		callback("No media is played.");
+		log("No media is played.");
 }
 
 function fifoErrorHandler(error, stdout, stderr) {
@@ -87,6 +93,7 @@ function playEnded(error, stdout, stderr) {
 	if (error != null) {
 		console.log('exec error: ' + error);
 	}
+	log("vege")
 }
 
 function isPlaying() {
@@ -98,4 +105,5 @@ exports.start = start;
 exports.stop = stop;
 exports.pause = pause;
 exports.isPlaying = isPlaying;
+exports.init = init;
 

@@ -1,8 +1,8 @@
 
-
-module.exports.init = function(player, queue) {
+module.exports.init = function(player, queue, logFunction) {
 	module.exports.player = player;
 	module.exports.queue = queue;
+	player.init(logFunction);
 }
 
 module.exports.clean = function() {
