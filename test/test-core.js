@@ -38,7 +38,34 @@ describe('Core', function() {
 			assert.equal(queue, core.queue)
 		});
 	});
-	describe('playNext', function () {
+	describe('core player', function () {
+		it('should add a new song', function () {
+			var addCalled = false;
+			queue.list = ['first.mp3', 'youtube.avi']
+			queue.add = function(song) {
+				addCalled = true;
+				assert.equal(song,"song");
+			}
+			core.add("song")
+			assert(addCalled)
+		});
+		it('should delegate play', function () {
+			var called = false;
+			player.start = function(song) {
+				called = true;
+				assert.equal(song,"song");
+			}
+			core.play("song")
+			assert(called)
+		});
+		it('should delegate stop', function () {
+			var called = false;
+			player.stop = function() {
+				called = true;
+			}
+			core.stop()
+			assert(called)
+		});
 		it('should play the first song', function () {
 			var popCalled = false;
 			queue.list = ['first.mp3', 'youtube.avi']
