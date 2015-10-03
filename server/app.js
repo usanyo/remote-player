@@ -2,6 +2,11 @@ var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
 var player = require("./player.js");
+var queue = require("./queue.js");
+var core = require("./core.js");
+
+core.init(player, queue);
+player.init(logResponse)
 
 var socket;
 
@@ -9,7 +14,7 @@ app.listen(8000);
 
 function handler (req, res) {
 	console.log('Request!!');
-  fs.readFile(__dirname + '/index.html',
+	fs.readFile(__dirname + '/index.html',
   	function (err, data) {
     	if (err) {
       	res.writeHead(500);
@@ -26,11 +31,11 @@ io.on('connection', connectionHandler);
 
 function connectionHandler(sock) {
 	socket = sock;
-  socket.on('play', function(path) {
-		player.start(path, logResponse);
+	socket.on('play', function(path) {
+		core.play(path);
 	});
 	socket.on('stop', function(){
-		player.stop(logResponse);
+		core.stop();
 		socket.emit('news',{message: 'stopped'});
 	});
 }

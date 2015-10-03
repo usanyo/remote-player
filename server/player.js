@@ -6,15 +6,19 @@ var PLAYER = "mplayer -slave -input file=" + FIFO;
 var sys = require('sys')
 var exec = require('child_process').exec;
 
-var playingProcess;
+var log = function(){}
 
-function start(path, callback) {
-	if(playingProcess != null)
-		playingProcess.kill();
-	if(!fs.existsSync(FIFO))
-		exec("mkfifo " + FIFO, fifoErrorHandler);
-	playingProcess = exec(PLAYER + " " + path, playEnded);
-	callback('start playing ' + path);
+function init(logFunction) {
+	log = logFunction;
+}
+
+function start(path) {
+	if(exports.playingProcess == null) {
+		if(!fs.existsSync(FIFO))
+			exec("mkfifo " + FIFO, fifoErrorHandler);
+		exports.playingProcess = exec(PLAYER + " " + path, playEnded);
+		log('start playing ' + path);
+	}
 }
 
 function stop() {
@@ -69,31 +73,31 @@ function toggleSubtitle() {
 	writeToFifo("s", fifoErrorHandler);
 }
 
-function writeToFifo(command, callback) {
+function writeToFifo(command) {
 	if(isPlaying())
-		exec("echo " + command + " > " + FIFO, callback);
+		exec("echo " + command + " > " + FIFO, log);
 	else
-		console.log('No media is played');
+		log("No media is played.");
 }
 
 function fifoErrorHandler(error, stdout, stderr) {
 	if(error)
 		console.log(error);
-	console.log("parancs elkuldve");
 }
 
 function playEnded(error, stdout, stderr) {
-	playingProcess = null;
+	exports.playingProcess = null;
 	console.log(stdout);
 	console.log(stderr);
 	console.log('vege');
 	if (error != null) {
 		console.log('exec error: ' + error);
 	}
+	log("vege")
 }
 
 function isPlaying() {
-	return playingProcess != null;
+	return exports.playingProcess != null;
 }
 
 exports.playEnded = playEnded;
@@ -101,4 +105,5 @@ exports.start = start;
 exports.stop = stop;
 exports.pause = pause;
 exports.isPlaying = isPlaying;
+exports.init = init;
 
