@@ -3,20 +3,23 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
 		<!--<link rel="stylesheet" type="text/css" href="player.css">-->
 		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
 		<script>
-		  var socket = io('http://localhost:8000');
-		  socket.on('news', function (data) {
-		  	var logDiv = document.getElementById("log");
-				logDiv.innerHTML = data.message;
-		  });
-
+			var socket = io('http://localhost:8000');
+			socket.on('news', function (data) {
+				var logDiv = document.getElementById("log");
+					logDiv.innerHTML = data.message;
+			});
+	
+			socket.on('lista', function (data) {
+				var logDiv = document.getElementById("list");
+					logDiv.innerHTML = putInTable(data);
+			});
+		  
 			function stop() {
 				socket.emit('stop');
 			}
@@ -24,6 +27,26 @@
 			function start() {
 				socket.emit('play', document.getElementById("source").value);
 			}
+			
+			function requestList() {
+				socket.emit('list');
+			}
+			
+			function putInTable(list) {
+				table="<div class=\"btn-group-vertical\">";
+				table = "<table>";
+				for(var i = 0; i < list.length; i++) {
+					if(list[i].status == "PLAYED")
+						table += "<button type=\"button\" style=\"background-color:green\" class=\"btn btn-primary\">"
+					else
+						table += "<button type=\"button\" class=\"btn btn-primary\">"
+					table += list[i].name
+					table += "</button>";
+				}
+				table += "</div>"
+				return table;
+			}
+			
 		</script>
 		<script>
 			var IP_ADDRESS = "192.168.0.105";
@@ -40,11 +63,11 @@
 			}
 
 			function getSongInfo() {
-				return sendCommand("songname");
+				//return sendCommand("songname");
 			}
 
 			function isPlayerRunning() {
-				return sendCommand("checkstatus") == "1";
+				//return sendCommand("checkstatus") == "1";
 			}
 
 			function sendCommand(ID) {
@@ -58,7 +81,7 @@
 
 			$(document).ready(function() {
 				checkPlayer();
-				window.setInterval(function () {checkPlayer()}, 1000);
+				requestList();
 			});
 		</script>
 	</head>
@@ -66,46 +89,27 @@
 		<input type="text" id="source" value="test.mp3">
 		<button onclick="start()">Start</button>
 		<button onclick="stop()">Stop</button>
+		<button onclick="requestList()">List</button>
 		<div id="log">
-				
 		</div>
 		<div id="player" class="container" role="main">
 			<div id="title" class="well"></div>
-				<p>
-					<div class="btn-group">
-						<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="seek_minus_600"><span class="glyphicon glyphicon-fast-backward"></span></button>
-						<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="seek_minus_30"><span class="glyphicon glyphicon-backward"></span></button>
-						<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="pause"><span class="glyphicon glyphicon glyphicon-play"></span></button>
-						<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="exit"><span class="glyphicon glyphicon glyphicon-stop"></span></button>
-						<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="seek_plus_30"><span class="glyphicon glyphicon-forward"></span></button>
-						<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="seek_plus_600"><span class="glyphicon glyphicon-fast-forward"></span></button>
-					</div>
-				</p>
-				<p>
-					<div class="btn-group">
-						<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="decrease_volume"><span class="glyphicon glyphicon-volume-down"></span></button>
-						<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="increase_volume"><span class="glyphicon glyphicon-volume-up"></span></button>
-					</div>
-				</p>
-				
-					<!--<td><img onclick="sendCommand(this.id)" id="seek_minus_600" src="player_images/back_large.png"></td>
-					<td><img onclick="sendCommand(this.id)" id="seek_minus_30" src="player_images/back_small.png"></td>
-					<td><img onclick="sendCommand(this.id)" id="pause" src="player_images/pause.png"></td>
-					<td><img onclick="sendCommand(this.id)" id="exit" src="player_images/stop.png"></td>
-					<td><img onclick="sendCommand(this.id)" id="seek_plus_30" src="player_images/forward_small.png"></td>
-					<td><img onclick="sendCommand(this.id)" id="seek_plus_600" src="player_images/forward_large.png"></td>-->
-<!--					<td></td>
-					<td></td>
-					<td><img onclick="sendCommand(this.id)" id="decrease_volume" src="player_images/volume_down.png"></td>
-					<td><img onclick="sendCommand(this.id)" id="increase_volume" src="player_images/volume_up.png"></td>
-					<td></td>
-					<td></td>-->
-<!--		$mapping['previous_audio'] = 'j'; 
-		$mapping['next_audio'] = 'k';-->
-<!--		$mapping['previous_subtitle'] = 'n';
-		$mapping['next_subtitle'] = 'm';
-		$mapping['toggle_subtitle'] = 's';-->
-		</div>
-		<!--<div id="debug"></div>-->
+			<p>
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="seek_minus_600"><span class="glyphicon glyphicon-fast-backward"></span></button>
+					<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="seek_minus_30"><span class="glyphicon glyphicon-backward"></span></button>
+					<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="pause"><span class="glyphicon glyphicon glyphicon-play"></span></button>
+					<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="exit"><span class="glyphicon glyphicon glyphicon-stop"></span></button>
+					<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="seek_plus_30"><span class="glyphicon glyphicon-forward"></span></button>
+					<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="seek_plus_600"><span class="glyphicon glyphicon-fast-forward"></span></button>
+				</div>
+			</p>
+			<p>
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="decrease_volume"><span class="glyphicon glyphicon-volume-down"></span></button>
+					<button type="button" class="btn btn-primary"  onclick="sendCommand(this.id)" id="increase_volume"><span class="glyphicon glyphicon-volume-up"></span></button>
+				</div>
+			</p>
+			<div id="list"></div>
 	</body>
 </html>

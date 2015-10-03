@@ -36,6 +36,9 @@ function connectionHandler(sock) {
 		core.stop();
 		socket.emit('news',{message: 'stopped'});
 	});
+	socket.on('list', function(){
+		socket.emit('lista',core.queue.list);
+	});
 }
 
 function logResponse(text) {

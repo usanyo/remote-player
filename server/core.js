@@ -3,6 +3,7 @@ module.exports.init = function(player, queue, logFunction) {
 	module.exports.player = player;
 	module.exports.queue = queue;
 	player.init(logFunction);
+	queue.init();
 }
 
 module.exports.clean = function() {
