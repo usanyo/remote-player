@@ -1,22 +1,22 @@
 [
     {
-        "name": "Test2",
-        "path": "/media/Teri",
-        "status": "PLAYED"
-    },
-    {
         "name": "Song0",
         "path": "/media/Teri0",
-        "status": "PLAYING"
+        "status": "PLAYED"
     },
     {
         "name": "Song1",
         "path": "/media/Teri1",
-        "status": "TO_PLAY"
+        "status": "PLAYED"
     },
     {
         "name": "Song2",
-        "path": "/media/Teris1",
-        "status": "PLAYED"
+        "path": "/media/Teri2",
+        "status": "PLAYING"
+    },
+    {
+        "name": "Song3",
+        "path": "/media/Teri3",
+        "status": "TO_PLAY"
     }
 ]

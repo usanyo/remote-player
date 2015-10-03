@@ -57,4 +57,15 @@ describe('Queue', function() {
 			assert.equal(queue.list[3].status, "TO_PLAY")
 		});
 	});
+	describe('Get current song', function () {
+		it('should return with the current song', function () {
+			queue.clean();
+			queue.add({name: "Song0", path: "/media/Teri0", status: "PLAYED"})
+			queue.add({name: "Song1", path: "/media/Teri1", status: "PLAYED"})
+			queue.add({name: "Song2", path: "/media/Teri2", status: "PLAYING"})
+			queue.add({name: "Song3", path: "/media/Teri3", status: "TO_PLAY"})
+			var current = queue.getCurrent()
+			assert.equal(JSON.stringify(current),JSON.stringify(queue.list[2]))
+		});
+	});
 });

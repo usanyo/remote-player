@@ -38,6 +38,7 @@ function connectionHandler(sock) {
 	});
 	socket.on('list', function(){
 		socket.emit('lista',core.queue.list);
+		socket.emit('current',core.queue.getCurrent());
 	});
 }
 

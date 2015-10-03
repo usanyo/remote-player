@@ -3,6 +3,7 @@ var fs = require("fs")
 var core = require("../server/core")
 
 var queue = {
+	init : function() {},
 	add : function() {},
 	length : function() {},
 	removeItem : function() {},
@@ -10,16 +11,17 @@ var queue = {
 	next : function() {},
 	goto : function() {},
 	clean : function() {},
+	getCurrent: function() {},
 	list : ['first.mp3', 'youtube.avi']
 }
 
 var player = {
 	init : function(logFun) {},
-	'playEnded' : function() {},
-	'start' : function() {},
-	'stop' : function() {},
-	'pause' : function() {},
-	'isPlaying' : function() {}
+	playEnded : function() {},
+	start : function() {},
+	stop : function() {},
+	pause : function() {},
+	isPlaying : function() {}
 }
 
 describe('Core', function() {
@@ -68,13 +70,22 @@ describe('Core', function() {
 			assert(called)
 		});
 		it('should play the first song', function () {
-			var popCalled = false;
+			var callLog = "";
 			queue.list = ['first.mp3', 'youtube.avi']
-			queue.pop = function() {
-				popCalled = true;
+			queue.next = function() {
+				callLog += "next,";
+			}
+			queue.getCurrent = function() {
+				return {path: "first.mp3"};
+			}
+			player.stop = function() {
+				callLog += "stop,";
+			}
+			player.start = function(media) {
+				callLog += "start:" + media;
 			}
 			core.playNext()
-			assert(popCalled)
+			assert.equal(callLog,"stop,next,start:first.mp3")
 		});
 	});
 

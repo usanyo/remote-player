@@ -1,27 +1,35 @@
 
-module.exports.init = function(player, queue, logFunction) {
-	module.exports.player = player;
-	module.exports.queue = queue;
+var player;
+var queue;
+
+module.exports.init = function(plr, que, logFunction) {
+	module.exports.player = plr;
+	player = plr;
+	module.exports.queue = que;
+	queue = que;
 	player.init(logFunction);
 	queue.init();
 }
 
 module.exports.clean = function() {
-	module.exports.queue.clean();
+	queue.clean();
 }
 
 module.exports.add = function(media) {
-	module.exports.queue.add(media);
+	queue.add(media);
 }
 
 module.exports.play = function(media) {
-	module.exports.player.start(media);
+	player.start(media);
 }
 
 module.exports.stop = function() {
-	module.exports.player.stop();
+	player.stop();
 }
 
 module.exports.playNext = function() {
-	module.exports.queue.pop();
+	player.stop();
+	queue.next();
+	var actualSong = queue.getCurrent();
+	player.start(actualSong.path)
 }
