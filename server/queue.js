@@ -59,6 +59,7 @@ module.exports.goto = function (index) {
 	list[index].status = "PLAYING"
 	for(var i = index + 1; i < list.length; i++)
 		list[i].status = "TO_PLAY"
+	saveJson()
 }
 
 module.exports.getCurrent = function() {

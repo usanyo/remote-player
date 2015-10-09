@@ -9,7 +9,7 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
 		<script>
-			var IP_ADDRESS = "192.168.0.102";
+			var IP_ADDRESS = "localhost";
 			
 			window.mobilecheck = function() {
 				var check = false;
@@ -32,25 +32,32 @@
 				printTitle(current.name)
 			});
 			
-			function stop() {
-				socket.emit('stop');
-			}
-
-			function start() {
-				socket.emit('play', document.getElementById("source").value);
+			socket.on('setStatus', function(isPlaying) {
+				if(!isPlaying)
+					document.getElementById("pause").innerHTML = "<span class=\"glyphicon glyphicon glyphicon-play\">";
+				else
+					document.getElementById("pause").innerHTML = "<span class=\"glyphicon glyphicon glyphicon-pause\">";
+			});
+			
+			function sendCommand(ID) {
+				socket.emit('command', ID);
 			}
 			
 			function requestList() {
 				socket.emit('list');
 			}
 			
+			function playThis(index) {
+				socket.emit('goto', index);
+			}
+			
 			function putInTable(list) {
 				table="<ul class=\"list-group\">";
 				for(var i = 0; i < list.length; i++) {
+					table += "<li class=\"list-group-item"
 					if(list[i].status == "PLAYING")
-						table += "<li class=\"list-group-item active\">"
-					else
-						table += "<li class=\"list-group-item\">"
+						table += " active"
+					table += "\" onclick=\"playThis(" + i + ")\">"
 					table += list[i].name
 					table += "</li>";
 				}
@@ -76,16 +83,7 @@
 			function isPlayerRunning() {
 				//return sendCommand("checkstatus") == "1";
 			}
-
-			function sendCommand(ID) {
-				var xmlHttp = new XMLHttpRequest();
-				xmlHttp.open( "GET", "http://" + IP_ADDRESS + "/player.php?command=" + ID, false );
-				xmlHttp.send( null );
-				var resp = xmlHttp.responseText;
-				//document.getElementById('debug').innerHTML = resp;
-				return resp;
-			}
-
+			
 			$(document).ready(function() {
 				checkPlayer();
 				requestList();
@@ -99,18 +97,13 @@
 		</script>
 	</head>
 	<body>
-		<input type="text" id="source" value="test.mp3">
-		<button onclick="start()">Start</button>
-		<button onclick="stop()">Stop</button>
-		<div id="log">
-		</div>
 		<div id="player" class="container" role="main">
 			<div id="title" class="well"></div>
 			<p>
 				<div class="btn-group">
 					<button type="button" class="btn btn-primary btn-lg"  onclick="sendCommand(this.id)" id="seek_minus_600"><span class="glyphicon glyphicon-fast-backward"></span></button>
 					<button type="button" class="btn btn-primary btn-lg"  onclick="sendCommand(this.id)" id="seek_minus_30"><span class="glyphicon glyphicon-backward"></span></button>
-					<button type="button" class="btn btn-primary btn-lg"  onclick="sendCommand(this.id)" id="pause"><span class="glyphicon glyphicon glyphicon-play"></span></button>
+					<button type="button" class="btn btn-primary btn-lg"  onclick="sendCommand(this.id)" id="pause"><span class="glyphicon glyphicon glyphicon-pause"></span></button>
 					<button type="button" class="btn btn-primary btn-lg"  onclick="sendCommand(this.id)" id="exit"><span class="glyphicon glyphicon glyphicon-stop"></span></button>
 					<button type="button" class="btn btn-primary btn-lg"  onclick="sendCommand(this.id)" id="seek_plus_30"><span class="glyphicon glyphicon-forward"></span></button>
 					<button type="button" class="btn btn-primary btn-lg"  onclick="sendCommand(this.id)" id="seek_plus_600"><span class="glyphicon glyphicon-fast-forward"></span></button>
@@ -123,5 +116,8 @@
 				</div>
 			</p>
 			<div id="list"></div>
+		</div>
+		<div id="log">
+		</div>
 	</body>
 </html>
