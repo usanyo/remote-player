@@ -1,13 +1,15 @@
 
 var player;
 var queue;
+var updateDisplay = function(){};
 
-module.exports.init = function(plr, que, logFunction) {
+module.exports.init = function(plr, que, callbacks) {
 	module.exports.player = plr;
-	player = plr;
 	module.exports.queue = que;
+	player = plr;
 	queue = que;
-	player.init(logFunction);
+	updateDisplay = callbacks.update;
+	player.init(callbacks.log, callbacks.status);
 	queue.init();
 }
 
@@ -40,6 +42,7 @@ module.exports.playNext = function() {
 			player.start(actualSong.path);
 		}
 	},1000);
+	updateDisplay();
 }
 
 module.exports.playThis = function(index) {
@@ -52,4 +55,15 @@ module.exports.playThis = function(index) {
 		},1000);
 		queue.goto(index);
 	}
+	updateDisplay();
+}
+
+module.exports.getStatus = function() {
+	if(player.isPlaying())
+		if(player.isPaused())
+			return 'PAUSED';
+		else
+			return 'PLAYING';
+	else
+		return 'STOPPED';
 }

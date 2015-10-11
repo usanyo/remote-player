@@ -12,15 +12,12 @@
 					logDiv.innerHTML = data.message;
 			});
 	
-			socket.on('lista', function (list) {
+			socket.on('update', function (input) {
 				var logDiv = document.getElementById("list");
-					logDiv.innerHTML = putInTable(list);
+					logDiv.innerHTML = putInTable(input.list);
+					printTitle(input.current.name)
 			});
-		  
-			socket.on('current', function (current) {
-				printTitle(current.name)
-			});
-			
+		  			
 			socket.on('setStatus', function(isPlaying) {
 				if(!isPlaying)
 					document.getElementById("pause").innerHTML = "<span class=\"glyphicon glyphicon glyphicon-play\">";
@@ -29,11 +26,11 @@
 			});
 			
 			function sendCommand(ID) {
-				socket.emit('command', ID);
+				socket.emit('execute', ID);
 			}
 			
 			function requestList() {
-				socket.emit('list');
+				socket.emit('getUpdate');
 			}
 			
 			function playThis(index) {

@@ -5,15 +5,19 @@ var player = require("./player.js");
 var queue = require("./queue.js");
 var core = require("./core.js");
 
-core.init(player, queue);
-player.init(logResponse, setStatus);
+var socket;
 
+core.init(player, queue, {
+	update : getUpdate,
+	log	: logResponse,
+	status: setStatus
+});
 app.listen(8000);
+io.on('connection', connectionHandler);
 
 function handler (req, res) {
-	console.log('Request!!');
+	console.log('Request for ' + req.url);
 	var path = req.url == '/' ? '/index.html' : req.url;
-	console.log(path)
 	fs.readFile(__dirname + path,
   	function (err, data) {
     	if (err) {
@@ -25,45 +29,52 @@ function handler (req, res) {
   });
 }
 
-var socket;
-
-io.on('connection', connectionHandler);
-
 function connectionHandler(sock) {
 	socket = sock;
-	socket.on('command', function(command){
-		switch(command) {
-			case 'pause':
-				if(core.player.isPlaying()) {
-					core.pause();
-				}
-				else
-					core.play(core.queue.getCurrent().path);
-				break;
-			case 'exit':
-				if(core.player.isPlaying())
-				core.stop();
-				break;
-			case 'seek_plus_600':
-				core.playNext();
-				socket.emit('lista',core.queue.list);
-				socket.emit('current',core.queue.getCurrent());
+	socket.on('execute', execute);
+	socket.on('getUpdate', getUpdate);
+	socket.on('goto', goto);
+	socket.on('getStatus', getStatus);
+}
 
-				break;
-		}
+function execute(command){
+	switch(command) {
+		case 'seek_minus_600':
+			break;
+		case 'seek_minu_30':
+			break;
+		case 'pause':
+			core.pause();
+			break;
+		case 'exit':
+			core.stop();
+			break;
+		case 'seek_plus_30':
+			break;
+		case 'seek_plus_600':
+			core.playNext();
+			break;
+		case 'decrease_volume':
+			break;
+		case 'increase_volume':
+			break;
+	}
+}
+
+function getUpdate(){
+	socket.emit('update', {
+		list: core.queue.list,
+		current: core.queue.getCurrent(),
+		status: core.getStatus() == 'PAUSED'
 	});
-	socket.on('list', function(){
-		socket.emit('lista',core.queue.list);
-		socket.emit('current',core.queue.getCurrent());
-	});
-	socket.on('goto', function(index){
-		core.playThis(index);
-		socket.emit('lista',core.queue.list);
-		socket.emit('current',core.queue.getCurrent());
-	});
-	socket.on('getStatus', function() {
-		setStatus(core.player.getStatus());
-	});
+}
+
+function goto(index) {
+	core.playThis(index);
+}
+
+function getStatus() {
+	setStatus(core.getStatus() == 'PAUSED');
 }
 
 function logResponse(text) {
