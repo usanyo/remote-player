@@ -34,12 +34,15 @@ module.exports.pause = function() {
 module.exports.playNext = function() {
 	player.stop();
 	queue.next();
-	var actualSong = queue.getCurrent();
-	player.start(actualSong.path)
+	setTimeout(function(){
+		if(!player.isPlaying()) {
+			var actualSong = queue.getCurrent();
+			player.start(actualSong.path);
+		}
+	},1000);
 }
 
 module.exports.playThis = function(index) {
-	//console.log("jatszik: " + player.isPlayer())
 	if(queue.indexOf(queue.getCurrent()) != index || !player.isPlaying()) {
 		if (player.isPlaying())
 			player.stop();

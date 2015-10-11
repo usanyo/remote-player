@@ -12,11 +12,13 @@ app.listen(8000);
 
 function handler (req, res) {
 	console.log('Request!!');
-	fs.readFile(__dirname + '/index.html',
+	var path = req.url == '/' ? '/index.html' : req.url;
+	console.log(path)
+	fs.readFile(__dirname + path,
   	function (err, data) {
     	if (err) {
       	res.writeHead(500);
-      	return res.end('Error loading index.html');
+      	return res.end('Error loading ' + path);
     	}
     	res.writeHead(200);
     	res.end(data);
@@ -42,6 +44,12 @@ function connectionHandler(sock) {
 				if(core.player.isPlaying())
 				core.stop();
 				break;
+			case 'seek_plus_600':
+				core.playNext();
+				socket.emit('lista',core.queue.list);
+				socket.emit('current',core.queue.getCurrent());
+
+				break;
 		}
 	});
 	socket.on('list', function(){
@@ -50,9 +58,11 @@ function connectionHandler(sock) {
 	});
 	socket.on('goto', function(index){
 		core.playThis(index);
-		console.log(JSON.stringify(core.queue.list));
 		socket.emit('lista',core.queue.list);
 		socket.emit('current',core.queue.getCurrent());
+	});
+	socket.on('getStatus', function() {
+		setStatus(core.player.getStatus());
 	});
 }
 

@@ -92,6 +92,10 @@ function fifoErrorHandler(error, stdout, stderr) {
 		console.log(error);
 }
 
+function getStatus() {
+	return isPaused;
+}
+
 function playEnded(error, stdout, stderr) {
 	exports.playingProcess = null;
 	console.log(stdout);
@@ -113,4 +117,5 @@ exports.stop = stop;
 exports.pause = pause;
 exports.isPlaying = isPlaying;
 exports.init = init;
+exports.getStatus = getStatus;
 
