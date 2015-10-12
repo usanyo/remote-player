@@ -1,6 +1,7 @@
 var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
+var path = require("path");
 var player = require("./player.js");
 var queue = require("./queue.js");
 var core = require("./core.js");
@@ -17,12 +18,14 @@ io.on('connection', connectionHandler);
 
 function handler (req, res) {
 	console.log('Request for ' + req.url);
-	var path = req.url == '/' ? '/index.html' : req.url;
-	fs.readFile(__dirname + path,
+	var url = req.url == '/' ? '/client/index.html' : req.url;
+	var fullPath = path.join(__dirname,'../', url);
+	console.log(fullPath);
+	fs.readFile(fullPath,
   	function (err, data) {
     	if (err) {
-      	res.writeHead(500);
-      	return res.end('Error loading ' + path);
+			res.writeHead(500);
+			return res.end('Error loading ' + fullPath);
     	}
     	res.writeHead(200);
     	res.end(data);

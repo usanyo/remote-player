@@ -42,7 +42,7 @@
 			}
 			
 			function putInTable(list) {
-				table="<ul class=\"list-group\">";
+				var table="<ul class=\"list-group\">";
 				for(var i = 0; i < list.length; i++) {
 					table += "<li class=\"list-group-item"
 					if(list[i].status == "PLAYING")
@@ -55,21 +55,6 @@
 				return table;
 			}
 
-			function checkPlayer() {
-				if(isPlayerRunning())
-					printTitle(getSongInfo());
-				else
-					printTitle("Nem megy semmi");
-			}
-
 			function printTitle(text) {
 					document.getElementById('title').innerHTML = "<p>" + text + "</p>";
-			}
-
-			function getSongInfo() {
-				//return sendCommand("songname");
-			}
-
-			function isPlayerRunning() {
-				//return sendCommand("checkstatus") == "1";
 			}
