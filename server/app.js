@@ -5,6 +5,7 @@ var path = require("path");
 var player = require("./player.js");
 var queue = require("./queue.js");
 var core = require("./core.js");
+var fileManager = require("./fileManager");
 
 var socket;
 
@@ -13,6 +14,7 @@ core.init(player, queue, {
 	log	: logResponse,
 	status: setStatus
 });
+fileManager.init(updateFiles, selectFile);
 app.listen(8000);
 io.on('connection', connectionHandler);
 
@@ -38,6 +40,7 @@ function connectionHandler(sock) {
 	socket.on('getUpdate', getUpdate);
 	socket.on('goto', goto);
 	socket.on('getStatus', getStatus);
+	socket.on('getFileUpdate', fileManager.open);
 }
 
 function execute(command){
@@ -83,6 +86,11 @@ function getStatus() {
 	setStatus(core.getStatus() == 'PAUSED');
 }
 
+function getFileUpdate(file) {
+	fileManager.open(file);
+	console.log('request accepted: ' + file)
+}
+
 function logResponse(text) {
 	console.log(text);
 	socket.emit('news', {message: text});
@@ -90,4 +98,15 @@ function logResponse(text) {
 
 function setStatus(value) {
 	socket.emit('setStatus', value);
+}
+
+function updateFiles(error, files) {
+	if(error)
+		socket.emit('new', error);
+	else
+		socket.emit('files', files);
+}
+
+function selectFile() {
+	//TODO
 }

@@ -9,13 +9,13 @@
 			var socket = io('http://' + IP_ADDRESS + ':8000');
 			socket.on('news', function (data) {
 				var logDiv = document.getElementById("log");
-					logDiv.innerHTML = data.message;
+				logDiv.innerHTML = data.message;
 			});
 	
 			socket.on('update', function (input) {
 				var logDiv = document.getElementById("list");
-					logDiv.innerHTML = putInTable(input.list);
-					printTitle(input.current.name)
+				logDiv.innerHTML = putInTable(input.list);
+				printTitle(input.current.name)
 			});
 		  			
 			socket.on('setStatus', function(isPlaying) {
@@ -23,6 +23,11 @@
 					document.getElementById("pause").innerHTML = "<span class=\"glyphicon glyphicon glyphicon-play\">";
 				else
 					document.getElementById("pause").innerHTML = "<span class=\"glyphicon glyphicon glyphicon-pause\">";
+			});
+			
+			socket.on('files', function(files) {
+				var filesDiv = document.getElementById("files");
+				filesDiv.innerHTML = updateFiles(files);
 			});
 			
 			function sendCommand(ID) {
@@ -33,12 +38,30 @@
 				socket.emit('getUpdate');
 			}
 			
+			function requestFileUpdate(file) {
+				socket.emit('getFileUpdate', file);
+				console.log('request sent:' + file);
+			}
+			
 			function playThis(index) {
 				socket.emit('goto', index);
 			}
 			
 			function getStatus() {
 				socket.emit('getStatus');
+			}
+			
+			function updateFiles(files) {
+				var table="<ul class=\"list-group\">";
+				table += "<li class=\"list-group-item\" onclick=\"requestFileUpdate(\'..\')\">..</li>";
+				for(var i = 0; i < files.length; i++) {
+					table += "<li class=\"list-group-item"
+					table += "\" onclick=\"requestFileUpdate(\'" + files[i] + "\')\">"
+					table += files[i]
+					table += "</li>";
+				}
+				table += "</ul>"
+				return table;
 			}
 			
 			function putInTable(list) {

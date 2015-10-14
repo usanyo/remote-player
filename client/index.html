@@ -10,6 +10,7 @@
 		<script>
 			$(document).ready(function() {
 				requestList();
+				requestFileUpdate();
 				getStatus();
 				if(window.mobilecheck()) {
 					document.getElementById('log').innerHTML = "Mobil";
@@ -40,6 +41,7 @@
 				</div>
 			</p>
 			<div id="list"></div>
+			<div id="files"></div>
 		</div>
 		<div id="log">
 		</div>
