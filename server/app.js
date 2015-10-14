@@ -47,7 +47,10 @@ function execute(command){
 		case 'seek_minu_30':
 			break;
 		case 'pause':
-			core.pause();
+			if(core.getStatus() == "STOPPED")
+				core.play();
+			else
+				core.pause();
 			break;
 		case 'exit':
 			core.stop();

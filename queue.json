@@ -2,12 +2,12 @@
     {
         "name": "Song0",
         "path": "server/test.mp3",
-        "status": "PLAYED"
+        "status": "PLAYING"
     },
     {
         "name": "Song1",
         "path": "server/test.mp3",
-        "status": "PLAYING"
+        "status": "TO_PLAY"
     },
     {
         "name": "Song2",

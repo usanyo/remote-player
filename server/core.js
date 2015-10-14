@@ -22,7 +22,10 @@ module.exports.add = function(media) {
 }
 
 module.exports.play = function(media) {
-	player.start(media);
+	if(media)
+		player.start(media);
+	else
+		player.start(queue.getCurrent().path);
 }
 
 module.exports.stop = function() {
