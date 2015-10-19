@@ -1,46 +1,112 @@
 var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
+var path = require("path");
 var player = require("./player.js");
 var queue = require("./queue.js");
 var core = require("./core.js");
-
-core.init(player, queue);
-player.init(logResponse)
+var fileManager = require("./fileManager");
 
 var socket;
 
+core.init(player, queue, {
+	update : getUpdate,
+	log	: logResponse,
+	status: setStatus
+});
+fileManager.init(updateFiles, selectFile);
 app.listen(8000);
+io.on('connection', connectionHandler);
 
 function handler (req, res) {
-	console.log('Request!!');
-	fs.readFile(__dirname + '/index.html',
+	console.log('Request for ' + req.url);
+	var url = req.url == '/' ? '/client/index.html' : req.url;
+	var fullPath = path.join(__dirname,'../', url);
+	console.log(fullPath);
+	fs.readFile(fullPath,
   	function (err, data) {
     	if (err) {
-      	res.writeHead(500);
-      	return res.end('Error loading index.html');
+			res.writeHead(500);
+			return res.end('Error loading ' + fullPath);
     	}
     	res.writeHead(200);
     	res.end(data);
   });
 }
 
-var socket;
-
-io.on('connection', connectionHandler);
-
 function connectionHandler(sock) {
 	socket = sock;
-	socket.on('play', function(path) {
-		core.play(path);
+	socket.on('execute', execute);
+	socket.on('getUpdate', getUpdate);
+	socket.on('goto', goto);
+	socket.on('getStatus', getStatus);
+	socket.on('getFileUpdate', fileManager.open);
+}
+
+function execute(command){
+	switch(command) {
+		case 'seek_minus_600':
+			break;
+		case 'seek_minu_30':
+			break;
+		case 'pause':
+			if(core.getStatus() == "STOPPED")
+				core.play();
+			else
+				core.pause();
+			break;
+		case 'exit':
+			core.stop();
+			break;
+		case 'seek_plus_30':
+			break;
+		case 'seek_plus_600':
+			core.playNext();
+			break;
+		case 'decrease_volume':
+			break;
+		case 'increase_volume':
+			break;
+	}
+}
+
+function getUpdate(){
+	socket.emit('update', {
+		list: core.queue.list,
+		current: core.queue.getCurrent(),
+		status: core.getStatus() == 'PAUSED'
 	});
-	socket.on('stop', function(){
-		core.stop();
-		socket.emit('news',{message: 'stopped'});
-	});
+}
+
+function goto(index) {
+	core.playThis(index);
+}
+
+function getStatus() {
+	setStatus(core.getStatus() == 'PAUSED');
+}
+
+function getFileUpdate(file) {
+	fileManager.open(file);
+	console.log('request accepted: ' + file)
 }
 
 function logResponse(text) {
 	console.log(text);
 	socket.emit('news', {message: text});
+}
+
+function setStatus(value) {
+	socket.emit('setStatus', value);
+}
+
+function updateFiles(error, files) {
+	if(error)
+		socket.emit('new', error);
+	else
+		socket.emit('files', files);
+}
+
+function selectFile() {
+	//TODO
 }

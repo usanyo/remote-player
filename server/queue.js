@@ -1,6 +1,11 @@
 var fs = require('fs');
 
 var PATH_TO_JSON = "queue.json"
+var list;
+
+module.exports.init = function () {
+	loadJson()
+}
 
 module.exports.clean = function () {
 	if(fs.existsSync(PATH_TO_JSON))
@@ -9,31 +14,30 @@ module.exports.clean = function () {
 
 module.exports.add = function (media) {
 	loadJson()
-	module.exports.list.push(media);
+	list.push(media);
 	saveJson()
 }
 
 module.exports.length = function() {
 	loadJson()
-	return module.exports.list.length;
+	return list.length;
 }
 
 module.exports.removeItem = function (item) {
 	loadJson()
 	var index = module.exports.indexOf(item)
-	module.exports.list.splice(index, 1)
+	list.splice(index, 1)
 	saveJson()
 }
 
 module.exports.indexOf = function (item) {
-	for(var i = 0; i < module.exports.list.length; i++)
+	for(var i = 0; i < list.length; i++)
 		if(JSON.stringify(item) === JSON.stringify(module.exports.list[i]))
 			return i;
 	return -1;
 }
 
 module.exports.next = function () {
-	var list = module.exports.list;
 	var isPlaying = false;
 	for(var i = 0; i < list.length; i++) {
 		if(list[i].status == "PLAYING") {
@@ -50,12 +54,24 @@ module.exports.next = function () {
 }
 
 module.exports.goto = function (index) {
-	var list = module.exports.list;
 	for(var i = 0; i < index; i++)
 		list[i].status = "PLAYED";
 	list[index].status = "PLAYING"
 	for(var i = index + 1; i < list.length; i++)
 		list[i].status = "TO_PLAY"
+	saveJson()
+}
+
+module.exports.getCurrent = function() {
+	loadJson()
+	var current = null;
+	list.forEach(function(song) {
+		if(song.status == "PLAYING") {
+			console.log(song.status)
+			current = song;
+		}
+	}, this);
+	return current;
 }
 
 function loadJson() {
@@ -63,6 +79,7 @@ function loadJson() {
 		module.exports.list = JSON.parse(fs.readFileSync(PATH_TO_JSON, 'utf8'));
 	else
 		module.exports.list = [];
+	list = module.exports.list;
 }
 
 function saveJson() {

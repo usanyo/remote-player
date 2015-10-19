@@ -1,13 +1,30 @@
 var fs = require("fs");
+var path = require("path");
 
-var path = "/home/sanyo"
+var updateList = function() {}
+var selectMedia = function() {}
 
-function isDir (argument) {
+var currentPath = "/home/sanyo";
+
+module.exports.init = function(updateFun, selectFun) {
+	updateList = updateFun;
+	selectMedia = selectFun;
 }
 
-fs.readdir(path, function(err, files) {
-	for (var i = 0; i < files.length; i++) {
-		console.log(files[i]);
+module.exports.open = function (item) {
+	if(item) {
+		currentPath = path.join(currentPath, item);
+		if(fs.lstatSync(currentPath).isDirectory()) {
+			console.log('Path: ' + currentPath);
+			getNewList();
+		}
 	}
-});
+	else {
+		getNewList();
+	}
+}
+
+function getNewList() {
+	fs.readdir(currentPath, updateList);
+}
 

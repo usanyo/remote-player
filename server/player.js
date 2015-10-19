@@ -7,9 +7,12 @@ var sys = require('sys')
 var exec = require('child_process').exec;
 
 var log = function(){}
+var setStatus = function(){}
+var isPaused = false;
 
-function init(logFunction) {
+function init(logFunction, setStatusFunction) {
 	log = logFunction;
+	setStatus = setStatusFunction;
 }
 
 function start(path) {
@@ -19,6 +22,8 @@ function start(path) {
 		exports.playingProcess = exec(PLAYER + " " + path, playEnded);
 		log('start playing ' + path);
 	}
+	setStatus(true);
+	isPaused = false;
 }
 
 function stop() {
@@ -27,6 +32,8 @@ function stop() {
 
 function pause() {
 	writeToFifo("p", fifoErrorHandler);
+	setStatus(isPaused);
+	isPaused = !isPaused;
 }
 
 function seekP30() {
@@ -85,15 +92,19 @@ function fifoErrorHandler(error, stdout, stderr) {
 		console.log(error);
 }
 
+function getStatus() {
+	return isPaused;
+}
+
 function playEnded(error, stdout, stderr) {
 	exports.playingProcess = null;
 	console.log(stdout);
 	console.log(stderr);
-	console.log('vege');
 	if (error != null) {
 		console.log('exec error: ' + error);
 	}
-	log("vege")
+	log("vege");
+	setStatus(false);
 }
 
 function isPlaying() {
@@ -106,4 +117,5 @@ exports.stop = stop;
 exports.pause = pause;
 exports.isPlaying = isPlaying;
 exports.init = init;
+exports.getStatus = getStatus;
 

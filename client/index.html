@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+		<script src="bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="client/client.js"></script>
+		<script>
+			$(document).ready(function() {
+				requestList();
+				requestFileUpdate();
+				getStatus();
+				if(window.mobilecheck()) {
+					document.getElementById('log').innerHTML = "Mobil";
+				}
+				else {
+					document.getElementById('log').innerHTML = "Számítógép";					
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<div id="player" class="container" role="main">
+			<div id="title" class="well"></div>
+			<p>
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary btn-lg"  onclick="sendCommand(this.id)" id="seek_minus_600"><span class="glyphicon glyphicon-fast-backward"></span></button>
+					<button type="button" class="btn btn-primary btn-lg"  onclick="sendCommand(this.id)" id="seek_minus_30"><span class="glyphicon glyphicon-backward"></span></button>
+					<button type="button" class="btn btn-primary btn-lg"  onclick="sendCommand(this.id)" id="pause"><span class="glyphicon glyphicon glyphicon-pause"></span></button>
+					<button type="button" class="btn btn-primary btn-lg"  onclick="sendCommand(this.id)" id="exit"><span class="glyphicon glyphicon glyphicon-stop"></span></button>
+					<button type="button" class="btn btn-primary btn-lg"  onclick="sendCommand(this.id)" id="seek_plus_30"><span class="glyphicon glyphicon-forward"></span></button>
+					<button type="button" class="btn btn-primary btn-lg"  onclick="sendCommand(this.id)" id="seek_plus_600"><span class="glyphicon glyphicon-fast-forward"></span></button>
+				</div>
+			</p>
+			<p>
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary btn-lg"  onclick="sendCommand(this.id)" id="decrease_volume"><span class="glyphicon glyphicon-volume-down"></span></button>
+					<button type="button" class="btn btn-primary btn-lg"  onclick="sendCommand(this.id)" id="increase_volume"><span class="glyphicon glyphicon-volume-up"></span></button>
+				</div>
+			</p>
+			<div id="list"></div>
+			<div id="files"></div>
+		</div>
+		<div id="log">
+		</div>
+	</body>
+</html>
