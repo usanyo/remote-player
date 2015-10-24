@@ -1,25 +1,31 @@
 var fs = require('fs');
 
 var FIFO = "/tmp/mplayercontrol";
-var PLAYER = "mplayer -slave -input file=" + FIFO;
+var PLAYER = "omxplayer";
 
 var sys = require('sys')
 var exec = require('child_process').exec;
 
 var log = function(){}
 var setStatus = function(){}
+var afterPlayCallback = function(){}
 var isPaused = false;
 
-function init(logFunction, setStatusFunction) {
+function init(logFunction, setStatusFunction, afterPlay) {
 	log = logFunction;
 	setStatus = setStatusFunction;
+	afterPlayCallback = afterPlay;
 }
 
 function start(path) {
 	if(exports.playingProcess == null) {
 		if(!fs.existsSync(FIFO))
 			exec("mkfifo " + FIFO, fifoErrorHandler);
-		exports.playingProcess = exec(PLAYER + " " + path, playEnded);
+		exports.playingProcess = exec(PLAYER + " \"" + path + "\" < " + FIFO, playEnded);
+		setTimeout(function() {
+			exec("echo -n p > " + FIFO);
+			exec("echo -n p > " +FIFO);
+		},500);
 		log('start playing ' + path);
 	}
 	setStatus(true);
@@ -82,7 +88,7 @@ function toggleSubtitle() {
 
 function writeToFifo(command) {
 	if(isPlaying())
-		exec("echo " + command + " > " + FIFO, log);
+		exec("echo -n " + command + " > " + FIFO, log);
 	else
 		log("No media is played.");
 }
@@ -105,6 +111,7 @@ function playEnded(error, stdout, stderr) {
 	}
 	log("vege");
 	setStatus(false);
+	afterPlayCallback();
 }
 
 function isPlaying() {

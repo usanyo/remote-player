@@ -1,22 +1,32 @@
 [
     {
-        "name": "Song0",
-        "path": "server/test.mp3",
-        "status": "PLAYING"
+        "name": "Kaláka - 01 - Robert Desnos - A pelikán.mp3",
+        "path": "/media/Teri/TEMP/1985 - A pelikán/Kaláka - 01 - Robert Desnos - A pelikán.mp3",
+        "status": "PLAYED"
     },
     {
-        "name": "Song1",
-        "path": "server/test.mp3",
-        "status": "TO_PLAY"
+        "name": "07-dropkick_murphys-im_shipping_up_to_boston.mp3",
+        "path": "/media/Teri/MUSIC/RENDEZETLEN/07-dropkick_murphys-im_shipping_up_to_boston.mp3",
+        "status": "PLAYED"
     },
     {
-        "name": "Song2",
-        "path": "server/test.mp3",
-        "status": "TO_PLAY"
+        "name": "Kaláka - 02 - Tamkó Sirató Károly - Bőrönd Ödön.mp3",
+        "path": "/media/Teri/TEMP/1985 - A pelikán/Kaláka - 02 - Tamkó Sirató Károly - Bőrönd Ödön.mp3",
+        "status": "PLAYED"
     },
     {
-        "name": "Song3",
-        "path": "server/test.mp3",
-        "status": "TO_PLAY"
+        "name": "Kaláka - 10 - Kányádi Sándor - Három székláb.mp3",
+        "path": "/media/Teri/TEMP/1985 - A pelikán/Kaláka - 10 - Kányádi Sándor - Három székláb.mp3",
+        "status": "PLAYED"
+    },
+    {
+        "name": "Kaláka - 04 - Móricz Zsigmond - Iciri-piciri.mp3",
+        "path": "/media/Teri/TEMP/1985 - A pelikán/Kaláka - 04 - Móricz Zsigmond - Iciri-piciri.mp3",
+        "status": "PLAYED"
+    },
+    {
+        "name": "22 - Quick step (Szabolcs).wma",
+        "path": "/media/Teri/MUSIC/RENDEZETLEN/Tanczene/22 - Quick step (Szabolcs).wma",
+        "status": "PLAYED"
     }
 ]

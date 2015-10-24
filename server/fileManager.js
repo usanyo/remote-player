@@ -4,7 +4,7 @@ var path = require("path");
 var updateList = function() {}
 var selectMedia = function() {}
 
-var currentPath = "/home/sanyo";
+var currentPath = "/media/Teri";
 
 module.exports.init = function(updateFun, selectFun) {
 	updateList = updateFun;
@@ -18,6 +18,16 @@ module.exports.open = function (item) {
 			console.log('Path: ' + currentPath);
 			getNewList();
 		}
+		else if( path.extname(currentPath) == ".mp3"
+					|| path.extname(currentPath) == ".mp4"
+					|| path.extname(currentPath) == ".mkv"
+					|| path.extname(currentPath) == ".avi"
+					|| path.extname(currentPath) == ".wma"
+					|| path.extname(currentPath) == ".wav"
+					) {
+			addMedia();
+			currentPath = path.join(currentPath, "..");
+		}
 	}
 	else {
 		getNewList();
@@ -26,5 +36,14 @@ module.exports.open = function (item) {
 
 function getNewList() {
 	fs.readdir(currentPath, updateList);
+}
+
+function addMedia() {
+	media = {
+		name: path.basename(currentPath),
+		path: currentPath,
+		status: "TO_PLAY"
+	};
+	selectMedia(media);
 }
 

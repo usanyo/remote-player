@@ -66,7 +66,8 @@ module.exports.getCurrent = function() {
 	loadJson()
 	var current = null;
 	list.forEach(function(song) {
-		if(song.status == "PLAYING") {
+		if(  song.status == "PLAYING"
+			|| song.status == "PAUSED") {
 			console.log(song.status)
 			current = song;
 		}

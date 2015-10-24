@@ -9,7 +9,7 @@ module.exports.init = function(plr, que, callbacks) {
 	player = plr;
 	queue = que;
 	updateDisplay = callbacks.update;
-	player.init(callbacks.log, callbacks.status);
+	player.init(callbacks.log, callbacks.status, module.exports.playNext);
 	queue.init();
 }
 
@@ -63,7 +63,7 @@ module.exports.playThis = function(index) {
 
 module.exports.getStatus = function() {
 	if(player.isPlaying())
-		if(player.isPaused())
+		if(player.getStatus())
 			return 'PAUSED';
 		else
 			return 'PLAYING';

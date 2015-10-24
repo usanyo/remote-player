@@ -107,6 +107,7 @@ function updateFiles(error, files) {
 		socket.emit('files', files);
 }
 
-function selectFile() {
-	//TODO
+function selectFile(media) {
+	core.add(media);
+	getUpdate();
 }
