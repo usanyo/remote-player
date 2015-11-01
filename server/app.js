@@ -40,7 +40,7 @@ function connectionHandler(sock) {
 	socket.on('getUpdate', getUpdate);
 	socket.on('goto', goto);
 	socket.on('getStatus', getStatus);
-	socket.on('getFileUpdate', fileManager.open);
+	socket.on('getFileUpdate', getFileUpdate);
 }
 
 function execute(command){
@@ -101,6 +101,7 @@ function setStatus(value) {
 }
 
 function updateFiles(error, files) {
+	console.log("files: " + files);
 	if(error)
 		socket.emit('new', error);
 	else

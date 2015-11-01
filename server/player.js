@@ -3,7 +3,7 @@ var fs = require('fs');
 var FIFO = "/tmp/mplayercontrol";
 var PLAYER = "omxplayer";
 
-var sys = require('sys')
+var sys = require('util')
 var exec = require('child_process').exec;
 
 var log = function(){}
@@ -11,10 +11,9 @@ var setStatus = function(){}
 var afterPlayCallback = function(){}
 var isPaused = false;
 
-function init(logFunction, setStatusFunction, afterPlay) {
+function init(logFunction, setStatusFunction) {
 	log = logFunction;
 	setStatus = setStatusFunction;
-	afterPlayCallback = afterPlay;
 }
 
 function start(path) {
@@ -118,6 +117,11 @@ function isPlaying() {
 	return exports.playingProcess != null;
 }
 
+function setCallback(cbFun) {
+	afterPlayCallback = cbFun;
+}
+
+
 exports.playEnded = playEnded;
 exports.start = start;
 exports.stop = stop;
@@ -125,4 +129,4 @@ exports.pause = pause;
 exports.isPlaying = isPlaying;
 exports.init = init;
 exports.getStatus = getStatus;
-
+exports.setCallback = setCallback;

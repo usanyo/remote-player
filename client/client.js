@@ -15,17 +15,18 @@
 			socket.on('update', function (input) {
 				var logDiv = document.getElementById("list");
 				logDiv.innerHTML = putInTable(input.list);
-				printTitle(input.current.name)
+				//printTitle(input.current.name)
 			});
 		  			
 			socket.on('setStatus', function(isPlaying) {
 				if(!isPlaying)
 					document.getElementById("pause").innerHTML = "<span class=\"glyphicon glyphicon glyphicon-play\">";
 				else
-					document.getElementById("pause").innerHTML = "<span class=\"glyphicon glyphicon glyphicon-pause\">";
+				document.getElementById("pause").innerHTML = "<span class=\"glyphicon glyphicon glyphicon-pause\">";
 			});
 			
 			socket.on('files', function(files) {
+				console.log("files: " + files);
 				var filesDiv = document.getElementById("files");
 				filesDiv.innerHTML = updateFiles(files);
 			});
@@ -81,3 +82,4 @@
 			function printTitle(text) {
 					document.getElementById('title').innerHTML = "<p>" + text + "</p>";
 			}
+

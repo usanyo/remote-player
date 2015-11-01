@@ -12,7 +12,8 @@ module.exports.init = function(updateFun, selectFun) {
 }
 
 module.exports.open = function (item) {
-	if(item) {
+	console.log("the current path: " + currentPath)
+	if(isValid(item)) {
 		currentPath = path.join(currentPath, item);
 		if(fs.lstatSync(currentPath).isDirectory()) {
 			console.log('Path: ' + currentPath);
@@ -32,6 +33,12 @@ module.exports.open = function (item) {
 	else {
 		getNewList();
 	}
+}
+
+function isValid(item) {
+	if(item)
+		return item != null;
+	return false;
 }
 
 function getNewList() {
