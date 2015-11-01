@@ -45,6 +45,7 @@ module.exports.playNext = function() {
 			var actualSong = queue.getCurrent();
 			player.setCallback(module.exports.playNext);
 			player.start(actualSong.path);
+			console.log("itt jarunk")
 		}
 	},1000);
 	updateDisplay();

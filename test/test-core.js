@@ -21,13 +21,20 @@ var player = {
 	start : function() {},
 	stop : function() {},
 	pause : function() {},
-	isPlaying : function() {}
+	isPlaying : function() {},
+	setCallback : function(fun) {}
+}
+
+var callbacks = {
+	update : function() {},
+	log : function() {},
+	status : function() {}
 }
 
 describe('Core', function() {
 	describe('init', function () {
 		it('should clean the queue', function () {
-			core.init(player, queue)
+			core.init(player, queue, callbacks)
 			var isCleaned = false;
 			core.queue.clean = function() {
 				isCleaned = true;
@@ -36,7 +43,7 @@ describe('Core', function() {
 			assert(isCleaned)
 		});
 		it('should assign the player and the queue', function () {
-			core.init(player, queue)
+			core.init(player, queue, callbacks)
 			assert.equal(player, core.player)
 			assert.equal(queue, core.queue)
 		});
@@ -84,8 +91,13 @@ describe('Core', function() {
 			player.start = function(media) {
 				callLog += "start:" + media;
 			}
+			player.isPlaying = function() {
+				return false;
+			}
 			core.playNext()
-			assert.equal(callLog,"stop,next,start:first.mp3")
+			setTimeout(function() {
+				assert.equal(callLog,"stop,next,start:first.mp3")
+			}, 1000)
 		});
 	});
 
